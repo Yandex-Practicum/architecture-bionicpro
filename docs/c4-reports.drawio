@@ -1,0 +1,39 @@
+<mxfile host="app.diagrams.net" agent="Composer" version="22.1.0">
+  <diagram id="reports" name="Reports ETL">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="560" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="crm" value="&lt;b&gt;CRM DB&lt;/b&gt;&lt;br&gt;клиенты" style="rounded=1;fillColor=#999999;fontColor=#fff;strokeColor=#6E6E6E;align=center;whiteSpace=wrap;html=1;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="tel" value="&lt;b&gt;Telemetry DB&lt;/b&gt;&lt;br&gt;датчики" style="rounded=1;fillColor=#999999;fontColor=#fff;strokeColor=#6E6E6E;align=center;whiteSpace=wrap;html=1;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="120" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="air" value="&lt;b&gt;Apache Airflow&lt;/b&gt;&lt;br&gt;ETL DAG @daily" style="rounded=1;fillColor=#1061B0;fontColor=#fff;strokeColor=#0D5091;align=center;whiteSpace=wrap;html=1;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="240" y="120" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="olap" value="&lt;b&gt;OLAP&lt;/b&gt;&lt;br&gt;витрина report_mart&lt;br&gt;(по user_id)" style="rounded=1;fillColor=#438DD5;fontColor=#fff;strokeColor=#2E6DA4;align=center;whiteSpace=wrap;html=1;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="470" y="110" width="160" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="api" value="&lt;b&gt;Reports API&lt;/b&gt;&lt;br&gt;GET /reports&lt;br&gt;только свой отчёт" style="rounded=1;fillColor=#1061B0;fontColor=#fff;strokeColor=#0D5091;align=center;whiteSpace=wrap;html=1;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="700" y="110" width="150" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ui" value="&lt;b&gt;Frontend&lt;/b&gt;" style="rounded=1;fillColor=#1061B0;fontColor=#fff;strokeColor=#0D5091;align=center;whiteSpace=wrap;html=1;fontSize=11" vertex="1" parent="1">
+          <mxGeometry x="700" y="240" width="150" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="endArrow=block;html=1;fontSize=10;" edge="1" parent="1" source="crm" target="air"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="endArrow=block;html=1;fontSize=10;" edge="1" parent="1" source="tel" target="air"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="load" style="endArrow=block;html=1;fontSize=10;" edge="1" parent="1" source="air" target="olap"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="SELECT" style="endArrow=block;html=1;fontSize=10;" edge="1" parent="1" source="olap" target="api"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="Bearer JWT" style="endArrow=block;html=1;fontSize=10;" edge="1" parent="1" source="ui" target="api"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

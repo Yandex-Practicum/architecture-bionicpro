@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import { useKeycloak } from '@react-keycloak/web';
 
+type Report = {
+  user_id: string;
+  full_name: string;
+  email: string;
+  prosthesis_model: string;
+  total_steps: number;
+  total_distance_m: number;
+  avg_load_kg: number;
+  sessions_count: number;
+  last_activity_at: string | null;
+  updated_at: string;
+};
+
 const ReportPage: React.FC = () => {
   const { keycloak, initialized } = useKeycloak();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [report, setReport] = useState<Report | null>(null);
 
   const downloadReport = async () => {
     if (!keycloak?.token) {
@@ -15,6 +29,7 @@ const ReportPage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
+      setReport(null);
 
       const response = await fetch(`${process.env.REACT_APP_API_URL}/reports`, {
         headers: {
@@ -22,7 +37,12 @@ const ReportPage: React.FC = () => {
         }
       });
 
-      
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.detail || `HTTP ${response.status}`);
+      }
+
+      setReport(await response.json());
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -65,6 +85,18 @@ const ReportPage: React.FC = () => {
         {error && (
           <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">
             {error}
+          </div>
+        )}
+
+        {report && (
+          <div className="mt-6 space-y-2 text-sm">
+            <p><b>User:</b> {report.full_name} ({report.user_id})</p>
+            <p><b>Model:</b> {report.prosthesis_model}</p>
+            <p><b>Steps:</b> {report.total_steps}</p>
+            <p><b>Distance:</b> {(report.total_distance_m / 1000).toFixed(2)} km</p>
+            <p><b>Avg load:</b> {Number(report.avg_load_kg).toFixed(1)} kg</p>
+            <p><b>Sessions:</b> {report.sessions_count}</p>
+            <p><b>Last activity:</b> {report.last_activity_at ?? '—'}</p>
           </div>
         )}
       </div>
