@@ -1,48 +1,80 @@
-import React, { useState } from 'react';
-import { useKeycloak } from '@react-keycloak/web';
+import React, { useEffect, useState } from 'react';
 
 const ReportPage: React.FC = () => {
-  const { keycloak, initialized } = useKeycloak();
+  const [authenticated, setAuthenticated] = useState(false);
+  const [consentRequired, setConsentRequired] = useState(false);
+  const [csrf, setCsrf] = useState('');
+  const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetch('/api/me', { credentials: 'include' })
+      .then(async response => {
+        if (response.status === 401) return;
+        if (!response.ok) throw new Error('Could not check session');
+        const data = await response.json();
+        setAuthenticated(data.authenticated);
+        setConsentRequired(Boolean(data.consent_required));
+        setCsrf(data.csrf_token || '');
+      })
+      .catch(err => setError(err.message))
+      .finally(() => setInitialized(true));
+  }, []);
+
   const downloadReport = async () => {
-    if (!keycloak?.token) {
-      setError('Not authenticated');
-      return;
-    }
-
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/reports`, {
-        headers: {
-          'Authorization': `Bearer ${keycloak.token}`
-        }
-      });
-
-      
+      const response = await fetch('/api/reports', { credentials: 'include' });
+      if (response.status === 401) { setAuthenticated(false); return; }
+      if (!response.ok) throw new Error('Report service is not available yet');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
-  if (!initialized) {
-    return <div>Loading...</div>;
-  }
+  const chooseConsent = async (allow: boolean) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/consent', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+        body: JSON.stringify({ allow })
+      });
+      if (response.status === 401) { setAuthenticated(false); return; }
+      if (!response.ok) throw new Error('Не удалось обработать согласие. Повторите попытку.');
+      setConsentRequired(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Ошибка обработки согласия');
+    } finally { setLoading(false); }
+  };
 
-  if (!keycloak.authenticated) {
+  if (!initialized) return <div>Loading...</div>;
+
+  if (authenticated && consentRequired) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <button
-          onClick={() => keycloak.login()}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
+        <div className="p-8 bg-white rounded-lg shadow-md">
+          <h1 className="text-2xl font-bold mb-4">Использование данных Яндекс ID</h1>
+          <p className="mb-4">Разрешаете BionicPRO получить и сохранить ваши идентификатор, логин, имя и email из Яндекс ID?</p>
+          <button disabled={loading} onClick={() => chooseConsent(true)}
+            className="px-4 py-2 bg-blue-500 text-white rounded">Разрешить</button>
+          <button disabled={loading} onClick={() => chooseConsent(false)} className="ml-4">Отказаться</button>
+          {error && <div className="mt-4 text-red-700">{error}</div>}
+        </div>
+      </div>
+    );
+  }
+
+
+  if (!authenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <button onClick={() => { window.location.href = '/auth/login'; }}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Login</button>
+        {error && <div className="mt-4 text-red-700">{error}</div>}
       </div>
     );
   }
@@ -51,22 +83,11 @@ const ReportPage: React.FC = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="p-8 bg-white rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-6">Usage Reports</h1>
-        
-        <button
-          onClick={downloadReport}
-          disabled={loading}
-          className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${
-            loading ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
-        >
+        <button onClick={downloadReport} disabled={loading}
+          className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
           {loading ? 'Generating Report...' : 'Download Report'}
         </button>
-
-        {error && (
-          <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">
-            {error}
-          </div>
-        )}
+        {error && <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">{error}</div>}
       </div>
     </div>
   );

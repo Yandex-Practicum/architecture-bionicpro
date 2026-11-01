@@ -1,0 +1,422 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 YaBrowser/24.10.0.0 Safari/537.36" pages="2">
+  <diagram name="01. Исходная архитектура" id="Vdj-dLDs9ZxfFK_ICv-k">
+    <mxGraphModel dx="2763" dy="1329" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-48" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-51" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-49" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-48" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Предоставление&amp;nbsp;&lt;br&gt;миосигналов" vertex="1">
+          <mxGeometry relative="1" x="0.111" y="-2" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-50" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-51" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-63">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="Пилот протеза" c4Type="Person" c4Description="С этого человека считываются данные" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-51">
+          <mxCell parent="1" style="html=1;fontSize=11;dashed=0;whiteSpace=wrap;fillColor=#6C6477;strokeColor=#4D4D4D;fontColor=#ffffff;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;" vertex="1">
+            <mxGeometry height="180" width="200" x="802" y="675" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-52" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.8041666666666667;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-58">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1432" y="765" />
+              <mxPoint x="1432" y="855" />
+              <mxPoint x="1902" y="855" />
+              <mxPoint x="1902" y="1085" />
+              <mxPoint x="1802" y="1085" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-53" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-52" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;" value="Отправка&lt;div&gt;&amp;nbsp;технической телеметрии&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-237" y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="Программа в чипе протеза" c4Type="Software System" c4Description="Чтение данных с датчиков, распознавание движений и их воспроизводство. Чтение команд из приложения и их воспроизводство, передача телеметрии" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-54">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#1061B0;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0D5091;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1132" y="705" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="База данных" c4Type="Container" c4Technology="PostgreSQL" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-55">
+          <mxCell parent="1" style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" vertex="1">
+            <mxGeometry height="120" width="240" x="1982" y="895" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="BionicPRO" c4Type="SystemScopeBoundary" c4Application="Software System" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;&lt;div style=&quot;text-align: left&quot;&gt;%c4Name%&lt;/div&gt;&lt;/b&gt;&lt;/font&gt;&lt;div style=&quot;text-align: left&quot;&gt;[%c4Application%]&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-56">
+          <mxCell parent="1" style="rounded=1;fontSize=11;whiteSpace=wrap;html=1;dashed=1;arcSize=20;fillColor=none;strokeColor=#666666;fontColor=#333333;labelBackgroundColor=none;align=left;verticalAlign=bottom;labelBorderColor=none;spacingTop=0;spacing=10;dashPattern=8 4;metaEdit=1;rotatable=0;perimeter=rectanglePerimeter;noLabel=0;labelPadding=0;allowArrows=0;connectable=0;expand=0;recursiveResize=0;editable=1;pointerEvents=0;absoluteArcSize=1;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="1040" width="990" x="1392" y="245" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-57" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="API" c4Type="Container" c4Technology="e.g. SpringBoot, ElasticSearch, etc." c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-58">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1609" y="1105" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-59" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-63" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-78">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-60" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-59" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=11;" value="HTTPS, session cookie" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-61" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-63" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-54">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-62" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-61" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Управление протезом" vertex="1">
+          <mxGeometry relative="1" x="0.1336" as="geometry">
+            <mxPoint y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="Приложение для донастройки протеза" c4Type="Container" c4Technology="iOD, Android" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-63">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1122" y="945" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-64" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-65" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-67">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="ML-инженер" c4Type="Person" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-65">
+          <mxCell parent="1" style="html=1;fontSize=11;dashed=0;whiteSpace=wrap;fillColor=#083F75;strokeColor=#06315C;fontColor=#ffffff;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;" vertex="1">
+            <mxGeometry height="180" width="200" x="2592" y="1125" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-66" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-67" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="cli tool" c4Type="Container" c4Technology="e.g. SpringBoot, ElasticSearch, etc." c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-67">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="2572" y="895" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-68" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-69" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-70">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="CRM" c4Type="Container" c4Technology="Битрикс24" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-69">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1962" y="275" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="CRM DB" c4Type="Container" c4Technology="e.g. Oracle Database 12" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-70">
+          <mxCell parent="1" style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" vertex="1">
+            <mxGeometry height="120" width="240" x="2102" y="465" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-71" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-72" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="Интернет-магазин" c4Type="Container" c4Technology="Битрикс24" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-72">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1482" y="275" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-73" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-72">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-74" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-73" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="Выбор протеза, заказ, оплата" vertex="1">
+          <mxGeometry relative="1" x="-0.3717" y="-3" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <object placeholders="1" c4Name="Покупатель протеза" c4Type="Person" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-75">
+          <mxCell parent="1" style="html=1;fontSize=11;dashed=0;whiteSpace=wrap;fillColor=#6C6477;strokeColor=#4D4D4D;fontColor=#ffffff;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;" vertex="1">
+            <mxGeometry height="180" width="200" x="812" y="245" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-76" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="peZxoNTQpPNp5TdXLnVO-69">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object placeholders="1" c4Name="Оператор производства" c4Type="Person" c4Description="" label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-77">
+          <mxCell parent="1" style="html=1;fontSize=11;dashed=0;whiteSpace=wrap;fillColor=#083F75;strokeColor=#06315C;fontColor=#ffffff;shape=mxgraph.c4.person2;align=center;metaEdit=1;points=[[0.5,0,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0]];resizable=0;" vertex="1">
+            <mxGeometry height="180" width="200" x="2712" y="245" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="bionicpro-auth" c4Type="Container" c4Technology="Backend / BFF" c4Description="Токены и сессии в памяти сервера. Клиент получает только защищённую сессионную cookie." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-78">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1582" y="945" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="Keycloak" c4Type="Container" c4Technology="OIDC / OAuth 2.0" c4Description="SSO, User Federation, Identity Brokering. Сопоставление ролей." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%: %c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-79">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;labelBackgroundColor=none;fillColor=#23A2D9;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#0E7DAD;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="1632" y="625" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="БД Keycloak" c4Type="Container" c4Technology="PostgreSQL" c4Description="Локальные профили и настройки. Хранение в стране представительства." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%:&amp;nbsp;%c4Technology%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#E6E6E6&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-80">
+          <mxCell parent="1" style="shape=cylinder3;size=15;whiteSpace=wrap;html=1;boundedLbl=1;rounded=0;labelBackgroundColor=none;fillColor=#23A2D9;fontSize=12;fontColor=#ffffff;align=center;strokeColor=#0E7DAD;metaEdit=1;points=[[0.5,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.5,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];resizable=0;" vertex="1">
+            <mxGeometry height="120" width="240" x="1982" y="655" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="LDAP представительства" c4Type="Software System" c4Description="Учётные записи в этой же стране. Проверка учётных данных по LDAPS." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-81">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#777777;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#555555;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="2462" y="625" as="geometry" />
+          </mxCell>
+        </object>
+        <object placeholders="1" c4Name="Внешний IdP" c4Type="Software System" c4Description="Провайдер в этой же стране. Подключение по OIDC или SAML." label="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;%c4Name%&lt;/b&gt;&lt;/font&gt;&lt;div&gt;[%c4Type%]&lt;/div&gt;&lt;br&gt;&lt;div&gt;&lt;font style=&quot;font-size: 11px&quot;&gt;&lt;font color=&quot;#cccccc&quot;&gt;%c4Description%&lt;/font&gt;&lt;/div&gt;" id="peZxoNTQpPNp5TdXLnVO-82">
+          <mxCell parent="1" style="rounded=1;whiteSpace=wrap;html=1;labelBackgroundColor=none;fillColor=#777777;fontColor=#ffffff;align=center;arcSize=10;strokeColor=#555555;metaEdit=1;resizable=0;points=[[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0.25,0],[1,0.5,0],[1,0.75,0],[0.75,1,0],[0.5,1,0],[0.25,1,0],[0,0.75,0],[0,0.5,0],[0,0.25,0]];" vertex="1">
+            <mxGeometry height="120" width="240" x="2762" y="625" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-83" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.3875;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-58">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-84" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-83" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=11;" value="HTTPS, access_token" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-85" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.2916666666666667;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-79">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-86" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-85" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=11;" value="Code + PKCE S256 / refresh&lt;br&gt;[HTTPS, токены сервер–сервер]" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-12" y="35" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-87" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;jumpSize=8;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-80">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-88" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-87" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=11;" value="SQL" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-89" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;jumpSize=8;exitX=0.5;exitY=0;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-81">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1752" y="605" />
+              <mxPoint x="2582" y="605" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-90" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-89" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=11;" value="User Federation [LDAPS]" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="205" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-91" edge="1" parent="1" source="peZxoNTQpPNp5TdXLnVO-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;jumpStyle=arc;jumpSize=8;exitX=0.6666666666666666;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" target="peZxoNTQpPNp5TdXLnVO-82">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1792" y="805" />
+              <mxPoint x="2882" y="805" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-92" connectable="0" parent="peZxoNTQpPNp5TdXLnVO-91" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=11;" value="Identity Brokering [OIDC / SAML, HTTPS]" vertex="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="115" y="-14" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-93" parent="1" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=14;" value="&lt;b&gt;Источники учётных записей страны представительства&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="600" x="2422" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="peZxoNTQpPNp5TdXLnVO-94" parent="1" style="shape=note;whiteSpace=wrap;html=1;align=left;verticalAlign=middle;spacing=15;fontSize=13;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;b&gt;Развёртывание по странам&lt;/b&gt;&lt;br&gt;Показан контур одной страны: здесь хранятся БД, профили, токены и сессии.&lt;br&gt;В другой стране разворачивается такой же контур с её локальными LDAP / IdP.&lt;br&gt;Персональные и медицинские данные не копируются в общую межстрановую БД." vertex="1">
+          <mxGeometry height="120" width="990" x="1392" y="1345" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="02. Учётные данные — TO-BE" id="bionicpro-auth-proposal">
+    <mxGraphModel dx="2240" dy="1660" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2240" pageHeight="1660" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="heading" value="&lt;b&gt;BionicPRO — управление учётными данными&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=28;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="2160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" value="C4: контейнеры аутентификации. Одинаковая схема в каждой стране; общей базы персональных данных нет." style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=18;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="75" width="2160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-country" value="" style="rounded=1;arcSize=4;dashed=1;dashPattern=8 4;fillColor=#f8fafc;strokeColor=#64748b;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="40" y="160" width="1040" height="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-title" value="&lt;b&gt;Россия&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=23;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="175" width="1020" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-user" value="&lt;b&gt;Пользователь&lt;/b&gt;&lt;br&gt;[Person]&lt;br&gt;&lt;br&gt;Пользователь этого представительства" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#08427b;fontColor=#ffffff;strokeColor=#08427b;" vertex="1" parent="1">
+          <mxGeometry x="90" y="240" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-frontend" value="&lt;b&gt;Frontend отчётов&lt;/b&gt;&lt;br&gt;[Container: React]&lt;br&gt;&lt;br&gt;Интерфейс без access-/refresh-токенов" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="440" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-auth" value="&lt;b&gt;bionicpro-auth&lt;/b&gt;&lt;br&gt;[Container: backend / BFF]&lt;br&gt;&lt;br&gt;Сессии и access_token — в RAM;&lt;br&gt;refresh_token — в зашифрованной RAM" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="710" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-api" value="&lt;b&gt;API BionicPRO&lt;/b&gt;&lt;br&gt;[Container: backend]&lt;br&gt;&lt;br&gt;Проверка токена и роли.&lt;br&gt;Проверка владельца протеза." style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="90" y="1040" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-medical" value="&lt;b&gt;БД приложения&lt;/b&gt;&lt;br&gt;[Container: PostgreSQL]&lt;br&gt;&lt;br&gt;Персональные и медицинские данные&lt;br&gt;остаются в этой стране" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;shape=cylinder3;size=15;boundedLbl=1;" vertex="1" parent="1">
+          <mxGeometry x="90" y="1320" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-keycloak" value="&lt;b&gt;Keycloak&lt;/b&gt;&lt;br&gt;[Container: Keycloak]&lt;br&gt;&lt;br&gt;Единый вход OIDC;&lt;br&gt;User Federation / Identity Brokering;&lt;br&gt;маппинг ролей" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="660" y="710" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-identity-db" value="&lt;b&gt;БД Keycloak&lt;/b&gt;&lt;br&gt;[Container: PostgreSQL]&lt;br&gt;&lt;br&gt;Конфигурация, локальные профили&lt;br&gt;и необходимые атрибуты" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;shape=cylinder3;size=15;boundedLbl=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="1040" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-source" value="&lt;b&gt;Учётные записи РФ&lt;/b&gt;&lt;br&gt;[External Software System]&lt;br&gt;&lt;br&gt;Локальный LDAP либо внешний IdP.&lt;br&gt;Исходные учётные данные." style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#666666;fontColor=#ffffff;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="660" y="1320" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-user" source="ru-user" target="ru-frontend" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-session" source="ru-frontend" target="ru-auth" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-browser" source="ru-frontend" target="ru-keycloak" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ru-e-token" source="ru-auth" target="ru-keycloak" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-api" source="ru-auth" target="ru-api" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-medical" source="ru-api" target="ru-medical" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-identity-db" source="ru-keycloak" target="ru-identity-db" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-e-source" source="ru-keycloak" target="ru-source" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="800" />
+              <mxPoint x="1030" y="1385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ru-t-user" value="Работает с приложением [HTTPS]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="85" y="365" width="310" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-cookie" value="/auth/*, /api/* [HTTPS]&lt;br&gt;Cookie: случайный session ID&lt;br&gt;HttpOnly; Secure; SameSite=Lax" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="70" y="610" width="340" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-browser" value="Вход через браузер&lt;br&gt;[HTTPS / OIDC redirects]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="400" y="445" width="255" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-token" value="Code + PKCE S256 → токены&lt;br&gt;Обновление через refresh_token&lt;br&gt;[HTTPS / OIDC, сервер–сервер]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="395" y="735" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-api" value="Передаёт запросы пользователя&lt;br&gt;[HTTPS, Bearer access_token]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="75" y="940" width="330" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-medical" value="Читает и записывает данные [SQL]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="75" y="1220" width="330" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-identity-db" value="Читает и записывает&lt;br&gt;локальные данные [SQL]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="650" y="940" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-source" value="Аутентификация / запрос атрибутов&lt;br&gt;LDAPS для LDAP; HTTPS для OIDC/SAML&lt;br&gt;Только источник своей страны" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="650" y="1220" width="360" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="ru-t-local" value="В этой стране: БД, сессии, токены, резервные копии и журналы.&lt;br&gt;Синий — компоненты BionicPRO; серый — внешний источник." style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1465" width="1020" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="b-country" value="" style="rounded=1;arcSize=4;dashed=1;dashPattern=8 4;fillColor=#f8fafc;strokeColor=#64748b;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="160" width="1040" height="1360" as="geometry" />
+        </mxCell>
+        <mxCell id="b-title" value="&lt;b&gt;Страна B (будущее представительство)&lt;/b&gt;" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=23;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="175" width="1020" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="b-user" value="&lt;b&gt;Пользователь&lt;/b&gt;&lt;br&gt;[Person]&lt;br&gt;&lt;br&gt;Пользователь этого представительства" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#08427b;fontColor=#ffffff;strokeColor=#08427b;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="240" width="300" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="b-frontend" value="&lt;b&gt;Frontend отчётов&lt;/b&gt;&lt;br&gt;[Container: React]&lt;br&gt;&lt;br&gt;Интерфейс без access-/refresh-токенов" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="440" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="b-auth" value="&lt;b&gt;bionicpro-auth&lt;/b&gt;&lt;br&gt;[Container: backend / BFF]&lt;br&gt;&lt;br&gt;Сессии и access_token — в RAM;&lt;br&gt;refresh_token — в зашифрованной RAM" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="710" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="b-api" value="&lt;b&gt;API BionicPRO&lt;/b&gt;&lt;br&gt;[Container: backend]&lt;br&gt;&lt;br&gt;Проверка токена и роли.&lt;br&gt;Проверка владельца протеза." style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="1040" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="b-medical" value="&lt;b&gt;БД приложения&lt;/b&gt;&lt;br&gt;[Container: PostgreSQL]&lt;br&gt;&lt;br&gt;Персональные и медицинские данные&lt;br&gt;остаются в этой стране" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;shape=cylinder3;size=15;boundedLbl=1;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="1320" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="b-keycloak" value="&lt;b&gt;Keycloak&lt;/b&gt;&lt;br&gt;[Container: Keycloak]&lt;br&gt;&lt;br&gt;Единый вход OIDC;&lt;br&gt;User Federation / Identity Brokering;&lt;br&gt;маппинг ролей" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;" vertex="1" parent="1">
+          <mxGeometry x="1780" y="710" width="300" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="b-identity-db" value="&lt;b&gt;БД Keycloak&lt;/b&gt;&lt;br&gt;[Container: PostgreSQL]&lt;br&gt;&lt;br&gt;Конфигурация, локальные профили&lt;br&gt;и необходимые атрибуты" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#438dd5;fontColor=#ffffff;strokeColor=#438dd5;shape=cylinder3;size=15;boundedLbl=1;" vertex="1" parent="1">
+          <mxGeometry x="1780" y="1040" width="300" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="b-source" value="&lt;b&gt;Учётные записи страны B&lt;/b&gt;&lt;br&gt;[External Software System]&lt;br&gt;&lt;br&gt;Локальный LDAP либо внешний IdP.&lt;br&gt;Исходные учётные данные." style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontSize=16;spacing=12;fillColor=#666666;fontColor=#ffffff;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1780" y="1320" width="300" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-user" source="b-user" target="b-frontend" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-session" source="b-frontend" target="b-auth" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-browser" source="b-frontend" target="b-keycloak" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1930" y="510" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b-e-token" source="b-auth" target="b-keycloak" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-api" source="b-auth" target="b-api" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-medical" source="b-api" target="b-medical" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-identity-db" source="b-keycloak" target="b-identity-db" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="b-e-source" source="b-keycloak" target="b-source" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#34495e;dashed=0;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2150" y="800" />
+              <mxPoint x="2150" y="1385" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="b-t-user" value="Работает с приложением [HTTPS]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1205" y="365" width="310" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-cookie" value="/auth/*, /api/* [HTTPS]&lt;br&gt;Cookie: случайный session ID&lt;br&gt;HttpOnly; Secure; SameSite=Lax" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="610" width="340" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-browser" value="Вход через браузер&lt;br&gt;[HTTPS / OIDC redirects]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="445" width="255" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-token" value="Code + PKCE S256 → токены&lt;br&gt;Обновление через refresh_token&lt;br&gt;[HTTPS / OIDC, сервер–сервер]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1515" y="735" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-api" value="Передаёт запросы пользователя&lt;br&gt;[HTTPS, Bearer access_token]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="940" width="330" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-medical" value="Читает и записывает данные [SQL]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="1220" width="330" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-identity-db" value="Читает и записывает&lt;br&gt;локальные данные [SQL]" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1770" y="940" width="320" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-source" value="Аутентификация / запрос атрибутов&lt;br&gt;LDAPS для LDAP; HTTPS для OIDC/SAML&lt;br&gt;Только источник своей страны" style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1770" y="1220" width="360" height="75" as="geometry" />
+        </mxCell>
+        <mxCell id="b-t-local" value="В этой стране: БД, сессии, токены, резервные копии и журналы.&lt;br&gt;Синий — компоненты BionicPRO; серый — внешний источник." style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=16;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="1465" width="1020" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="footer" value="Access token ≤ 120 с; сессия — 30 мин; смена session ID после проверки сессии.&lt;br&gt;Показан контур аутентификации. Остальные компоненты и связи — на странице 01. Страна B — схема расширения, а не уже выполненное развёртывание." style="text;html=1;whiteSpace=wrap;align=center;verticalAlign=middle;fontSize=18;fontColor=#273442;strokeColor=none;fillColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1550" width="2160" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

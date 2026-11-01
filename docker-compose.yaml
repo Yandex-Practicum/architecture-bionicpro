@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+
+  ldap:
+    image: osixia/openldap:1.5.0
+    command: ["--copy-service"]
+    environment:
+      LDAP_ORGANISATION: BionicPRO
+      LDAP_DOMAIN: example.com
+      LDAP_ADMIN_PASSWORD: admin
+      LDAP_TLS: "false"
+    volumes:
+      - ./ldap/config.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/50-bionicpro.ldif:ro
+      - ldap-data:/var/lib/ldap
+      - ldap-config:/etc/ldap/slapd.d
+
   keycloak_db:
     image: postgres:14
     environment:
@@ -11,8 +25,12 @@ services:
       - ./postgres-keycloak-data:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+
   keycloak:
-    image: quay.io/keycloak/keycloak:21.1
+    image: bionicpro-keycloak:21.1
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -20,6 +38,14 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak_db:5432/keycloak_db
       KC_DB_USERNAME: keycloak_user
       KC_DB_PASSWORD: keycloak_password
+      KC_HOSTNAME_URL: https://localhost:8443
+      KC_HOSTNAME_ADMIN_URL: https://localhost:8443
+      KC_PROXY: edge
+      BIONICPRO_AUTH_CLIENT_SECRET: ${BIONICPRO_AUTH_CLIENT_SECRET:?Run scripts/setup-task3.sh
+        first}
+      YANDEX_CLIENT_ID: ${YANDEX_CLIENT_ID:-}
+      YANDEX_CLIENT_SECRET: ${YANDEX_CLIENT_SECRET:-}
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD}
     command: 
       - start-dev
       - --import-realm
@@ -29,14 +55,45 @@ services:
       - "8080:8080"
     depends_on:
       - keycloak_db
+      - ldap
+
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+      - "8443:443"
+    volumes:
+      - ./.local/tls:/etc/nginx/tls:ro
+    depends_on:
+      bionicpro-auth:
+        condition: service_healthy
+
+  bionicpro-auth:
+    build: ./bionicpro-auth
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     environment:
-      REACT_APP_API_URL: http://localhost:8000
-      REACT_APP_KEYCLOAK_URL: http://localhost:8080
-      REACT_APP_KEYCLOAK_REALM: reports-realm
-      REACT_APP_KEYCLOAK_CLIENT_ID: reports-frontend
+      PUBLIC_ORIGIN: https://localhost:8443
+      KEYCLOAK_ISSUER: https://localhost:8443/realms/reports-realm
+      KEYCLOAK_INTERNAL_URL: http://keycloak:8080/realms/reports-realm
+      BIONICPRO_AUTH_CLIENT_SECRET: ${BIONICPRO_AUTH_CLIENT_SECRET:?Run scripts/setup-task3.sh
+        first}
+      TOKEN_ENCRYPTION_KEY: ${TOKEN_ENCRYPTION_KEY:?Run scripts/setup-task3.sh first}
+      REPORTS_API_URL: http://reports-api:8000
+      NO_PROXY: localhost,127.0.0.1,keycloak,reports-api
+      no_proxy: localhost,127.0.0.1,keycloak,reports-api
+      PROFILE_DB: /data/yandex-profiles.sqlite3
+    depends_on:
+      - keycloak
+    volumes:
+    - profile-data:/data
+
+volumes:
+  ldap-data: null
+  ldap-config: null
+  profile-data: null
