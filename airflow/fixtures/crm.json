@@ -1,0 +1,14 @@
+{
+  "result": [
+    {
+      "ID": "101",
+      "UF_CRM_KEYCLOAK_SUB": "77f882ae-ab7f-4a96-a7c9-4302405d2195",
+      "UF_CRM_PROSTHESIS_IDS": ["P001", "P002"]
+    },
+    {
+      "ID": "102",
+      "UF_CRM_KEYCLOAK_SUB": "demo-user-2",
+      "UF_CRM_PROSTHESIS_IDS": ["P003"]
+    }
+  ]
+}

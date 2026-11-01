@@ -8,6 +8,7 @@ import secrets
 import time
 from contextlib import asynccontextmanager
 from urllib.parse import urlencode
+from datetime import date
 
 import profiles
 
@@ -172,23 +173,58 @@ async def me(request: Request):
         return rotate(request, session, JSONResponse(data))
 
 @app.get('/api/reports')
-async def reports(request: Request):
+async def reports(
+    request: Request,
+    date_from: date,
+    date_to: date,
+):
     async with lock:
         session, error = await authorized(request)
+
         if error is not None:
             return error
+
         if session.get('consent_required'):
-            return rotate(request, session, JSONResponse({'detail': 'Profile consent is required'}, status_code=403))
+            return rotate(
+                request,
+                session,
+                JSONResponse(
+                    {'detail': 'Profile consent is required'},
+                    status_code=403,
+                ),
+            )
+
         try:
-            upstream = await request.app.state.http.get(API_URL + '/reports',
-                headers={'Authorization': 'Bearer ' + session['access']})
-            if upstream.status_code != 200:
-                response = JSONResponse({'detail': 'Report service returned an error'}, status_code=502)
+            upstream = await request.app.state.http.get(
+                API_URL + '/reports',
+                params={
+                    'date_from': date_from.isoformat(),
+                    'date_to': date_to.isoformat(),
+                },
+                headers={
+                    'Authorization': 'Bearer ' + session['access'],
+                },
+            )
+
+            if upstream.status_code in (
+                200, 400, 401, 403, 409, 422,
+            ):
+                response = JSONResponse(
+                    upstream.json(),
+                    status_code=upstream.status_code,
+                )
             else:
-                response = Response(upstream.content,
-                    media_type=upstream.headers.get('content-type', 'application/octet-stream'))
-        except httpx.HTTPError:
-            response = JSONResponse({'detail': 'Report service is not available yet'}, status_code=502)
+                response = JSONResponse(
+                    {'detail': 'Report service returned an error'},
+                    status_code=502,
+                )
+
+        except (httpx.HTTPError, ValueError):
+            response = JSONResponse(
+                {'detail': 'Report service is unavailable'},
+                status_code=502,
+            )
+
         return rotate(request, session, response)
 
 

@@ -93,7 +93,107 @@ services:
     volumes:
     - profile-data:/data
 
+  source-db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: telemetry
+      POSTGRES_USER: telemetry
+      POSTGRES_PASSWORD: telemetry_demo
+    volumes:
+      - reports-source-data:/var/lib/postgresql/data
+      - ./airflow/fixtures/postgres.sql:/docker-entrypoint-initdb.d/01-telemetry.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U telemetry -d telemetry"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    environment:
+      CLICKHOUSE_DB: reports
+      CLICKHOUSE_USER: reports
+      CLICKHOUSE_PASSWORD: reports_demo
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+    volumes:
+      - reports-clickhouse-data:/var/lib/clickhouse
+      - ./airflow/clickhouse/config.xml:/etc/clickhouse-server/config.d/teaching.xml:ro
+    ports:
+      - "127.0.0.1:8123:8123"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - clickhouse-client --user reports --password reports_demo --query 'SELECT 1' >/dev/null
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  airflow:
+    image: apache/airflow:2.10.5-python3.11
+    command: standalone
+    environment:
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: airflow_demo
+
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
+      AIRFLOW__CORE__DEFAULT_TIMEZONE: Europe/Moscow
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+      AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: "15"
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "false"
+
+      CRM_SOURCE: ${CRM_SOURCE:-fixture}
+      CRM_FIXTURE_PATH: /opt/airflow/fixtures/crm.json
+      CRM_WEBHOOK_URL: ${CRM_WEBHOOK_URL:-}
+      CRM_USER_ID_FIELD: ${CRM_USER_ID_FIELD:-UF_CRM_KEYCLOAK_SUB}
+      CRM_PROSTHESIS_IDS_FIELD: ${CRM_PROSTHESIS_IDS_FIELD:-UF_CRM_PROSTHESIS_IDS}
+
+      TELEMETRY_DSN: postgresql://telemetry:telemetry_demo@source-db:5432/telemetry
+
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: reports
+      CLICKHOUSE_PASSWORD: reports_demo
+
+      NO_PROXY: localhost,127.0.0.1,source-db,clickhouse
+      no_proxy: localhost,127.0.0.1,source-db,clickhouse
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags:ro
+      - ./airflow/sql:/opt/airflow/sql:ro
+      - ./airflow/fixtures:/opt/airflow/fixtures:ro
+      - reports-airflow-data:/opt/airflow
+    ports:
+      - "127.0.0.1:8081:8080"
+    depends_on:
+      source-db:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+
+  reports-api:
+    build:
+      context: ./reports-api
+    environment:
+      CLICKHOUSE_URL: http://clickhouse:8123
+      CLICKHOUSE_USER: reports
+      CLICKHOUSE_PASSWORD: reports_demo
+
+      KEYCLOAK_ISSUER: https://localhost:8443/realms/reports-realm
+      KEYCLOAK_JWKS_URL: http://keycloak:8080/realms/reports-realm/protocol/openid-connect/certs
+      
+      NO_PROXY: localhost,127.0.0.1,clickhouse,keycloak
+      no_proxy: localhost,127.0.0.1,clickhouse,keycloak
+    ports:
+      - "127.0.0.1:8001:8000"
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
 volumes:
   ldap-data: null
   ldap-config: null
   profile-data: null
+  reports-source-data:
+  reports-clickhouse-data:
+  reports-airflow-data:

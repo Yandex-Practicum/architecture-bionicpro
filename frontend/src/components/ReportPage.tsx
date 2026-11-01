@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReportForm from './ReportForm';
 
 const ReportPage: React.FC = () => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -21,18 +22,6 @@ const ReportPage: React.FC = () => {
       .catch(err => setError(err.message))
       .finally(() => setInitialized(true));
   }, []);
-
-  const downloadReport = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch('/api/reports', { credentials: 'include' });
-      if (response.status === 401) { setAuthenticated(false); return; }
-      if (!response.ok) throw new Error('Report service is not available yet');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally { setLoading(false); }
-  };
 
   const chooseConsent = async (allow: boolean) => {
     setLoading(true);
@@ -80,14 +69,13 @@ const ReportPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="p-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-6">Usage Reports</h1>
-        <button onClick={downloadReport} disabled={loading}
-          className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-          {loading ? 'Generating Report...' : 'Download Report'}
-        </button>
-        {error && <div className="mt-4 p-4 bg-red-100 text-red-700 rounded">{error}</div>}
+    <div className="min-h-screen bg-gray-100 px-4 py-12">
+      <div className="mx-auto w-full max-w-3xl rounded-2xl bg-white p-6 shadow-sm sm:p-8">
+        <h1 className="mb-2 text-2xl font-bold text-gray-900">
+          Отчёты
+        </h1>
+
+        <ReportForm />
       </div>
     </div>
   );
