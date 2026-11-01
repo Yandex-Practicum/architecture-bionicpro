@@ -81,10 +81,10 @@ def get_report(
     readiness = query_clickhouse(
         """
         SELECT uniqExact(report_date) AS ready_days
-        FROM reports.etl_periods FINAL
+        FROM reports.user_report_cdc_daily
         WHERE report_date BETWEEN
             {date_from:Date} AND {date_to:Date}
-          AND status = 'ready'
+        AND is_ready_marker = 1
         """,
         parameters,
     )
@@ -107,13 +107,15 @@ def get_report(
         SELECT
             report_date,
             client_id,
+            client_name,
             prosthesis_id,
             signals_count,
             movements_count
-        FROM reports.user_report_daily
+        FROM reports.user_report_cdc_daily
         WHERE user_id = {user_id:String}
-          AND report_date BETWEEN
-              {date_from:Date} AND {date_to:Date}
+        AND is_ready_marker = 0
+        AND report_date BETWEEN
+            {date_from:Date} AND {date_to:Date}
         ORDER BY report_date, prosthesis_id
         """,
         parameters,
@@ -131,7 +133,7 @@ def get_report(
         "reports": rows,
     }
 
-    key = save_report(report)
+    key = save_report(report, key=key)
 
     return {
         "report_url": report_url(key),

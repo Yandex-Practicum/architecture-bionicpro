@@ -2,4 +2,8 @@
     <background_schedule_pool_size>16</background_schedule_pool_size>
     <background_pool_size>16</background_pool_size>
     <max_server_memory_usage>2147483648</max_server_memory_usage>
+
+    <kafka>
+        <auto_offset_reset>earliest</auto_offset_reset>
+    </kafka>
 </clickhouse>

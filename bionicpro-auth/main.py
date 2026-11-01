@@ -299,7 +299,7 @@ async def report_file(
             )
 
         if not re.fullmatch(
-            r'\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}_v\d+\.json',
+            r'\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}_v\d+_cdc1\.json',
             filename,
         ):
             raise HTTPException(

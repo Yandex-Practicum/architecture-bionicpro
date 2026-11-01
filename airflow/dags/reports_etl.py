@@ -318,7 +318,7 @@ def publish(report_date):
             """
             SELECT count()
             FROM reports.telemetry_stage t
-            LEFT ANTI JOIN reports.crm_stage c
+            LEFT ANTI JOIN reports.crm_current_prostheses c
                 ON t.prosthesis_id = c.prosthesis_id
             """
         )
@@ -344,7 +344,7 @@ def publish(report_date):
                 countIf(t.event_type = 'signal'),
                 countIf(t.event_type = 'movement')
             FROM reports.telemetry_stage t
-            INNER JOIN reports.crm_stage c
+            INNER JOIN reports.crm_current_prostheses c
                 ON t.prosthesis_id = c.prosthesis_id
             GROUP BY
                 c.user_id,

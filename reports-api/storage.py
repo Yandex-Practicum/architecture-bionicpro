@@ -37,20 +37,21 @@ def report_key(user_id, date_from, date_to):
         user_id.encode("utf-8")
     ).hexdigest()
 
-    version = int(time.time()) // 3600
+    version = int(time.time()) // 60
 
     return (
         f"reports/{user_directory}/"
-        f"{date_from}_{date_to}_v{version}.json"
+        f"{date_from}_{date_to}_v{version}_cdc1.json"
     )
 
 
-def save_report(report):
-    key = report_key(
-        report["user_id"],
-        report["date_from"],
-        report["date_to"],
-    )
+def save_report(report, key=None):
+    if key is None:
+        key = report_key(
+            report["user_id"],
+            report["date_from"],
+            report["date_to"],
+        )
 
     body = json.dumps(
         report,

@@ -28,10 +28,6 @@ def reports_daily():
         reports_etl.initialize()
 
     @task
-    def extract_crm():
-        reports_etl.load_crm()
-
-    @task
     def extract_telemetry():
         context = get_current_context()
 
@@ -53,12 +49,10 @@ def reports_daily():
         reports_etl.publish(day.isoformat())
 
     tables = prepare_tables()
-    crm = extract_crm()
     telemetry = extract_telemetry()
     mart = prepare_mart()
 
-    tables >> [crm, telemetry]
-    [crm, telemetry] >> mart
+    tables >> telemetry >> mart
 
 
 reports_daily()
