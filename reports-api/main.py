@@ -3,7 +3,12 @@ from datetime import date
 import requests
 from fastapi import Depends, FastAPI, HTTPException, Query
 from auth import require_user
-
+from storage import (
+    report_exists,
+    report_key,
+    report_url,
+    save_report,
+)
 
 app = FastAPI(title="BionicPRO Reports API")
 
@@ -54,6 +59,17 @@ def get_report(
             status_code=400,
             detail="date_from не может быть позже date_to",
         )
+
+    key = report_key(
+        user_id,
+        date_from.isoformat(),
+        date_to.isoformat(),
+    )
+
+    if report_exists(key):
+        return {
+            "report_url": report_url(key),
+        }
 
     parameters = {
         "param_user_id": user_id,
@@ -108,9 +124,15 @@ def get_report(
         row["signals_count"] = int(row["signals_count"])
         row["movements_count"] = int(row["movements_count"])
 
-    return {
+    report = {
         "user_id": user_id,
         "date_from": date_from.isoformat(),
         "date_to": date_to.isoformat(),
         "reports": rows,
+    }
+
+    key = save_report(report)
+
+    return {
+        "report_url": report_url(key),
     }

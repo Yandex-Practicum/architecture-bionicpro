@@ -80,8 +80,21 @@ const ReportForm: React.FC = () => {
         );
       }
 
-      const data: Report = await response.json();
-      setReport(data);
+      const data: { report_url: string } = await response.json();
+
+      const fileResponse = await fetch(data.report_url, {
+        credentials: 'same-origin',
+        cache: 'no-store',
+      });
+
+      if (!fileResponse.ok) {
+        throw new Error(
+          'Не удалось загрузить файл отчёта. Повтори запрос.'
+        );
+      }
+
+      const reportData: Report = await fileResponse.json();
+      setReport(reportData);
     } catch (err) {
       setError(
         err instanceof Error

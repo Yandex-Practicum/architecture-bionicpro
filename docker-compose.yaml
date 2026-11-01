@@ -85,9 +85,10 @@ services:
         first}
       TOKEN_ENCRYPTION_KEY: ${TOKEN_ENCRYPTION_KEY:?Run scripts/setup-task3.sh first}
       REPORTS_API_URL: http://reports-api:8000
-      NO_PROXY: localhost,127.0.0.1,keycloak,reports-api
-      no_proxy: localhost,127.0.0.1,keycloak,reports-api
       PROFILE_DB: /data/yandex-profiles.sqlite3
+      REPORTS_CDN_URL: http://reports-cdn:8080
+      NO_PROXY: localhost,127.0.0.1,keycloak,reports-api,reports-cdn
+      no_proxy: localhost,127.0.0.1,keycloak,reports-api,reports-cdn
     depends_on:
       - keycloak
     volumes:
@@ -182,13 +183,37 @@ services:
       KEYCLOAK_ISSUER: https://localhost:8443/realms/reports-realm
       KEYCLOAK_JWKS_URL: http://keycloak:8080/realms/reports-realm/protocol/openid-connect/certs
       
-      NO_PROXY: localhost,127.0.0.1,clickhouse,keycloak
-      no_proxy: localhost,127.0.0.1,clickhouse,keycloak
+      NO_PROXY: localhost,127.0.0.1,clickhouse,keycloak,minio
+      no_proxy: localhost,127.0.0.1,clickhouse,keycloak,minio
+
+      S3_ENDPOINT_URL: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      S3_BUCKET: reports
     ports:
       - "127.0.0.1:8001:8000"
     depends_on:
       clickhouse:
         condition: service_healthy
+
+  minio:
+    image: bitnamilegacy/minio:2025.4.22-debian-12-r1
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      MINIO_DEFAULT_BUCKETS: reports
+    volumes:
+      - reports-minio-data:/bitnami/minio/data
+    ports:
+      - "127.0.0.1:9001:9001"
+
+  reports-cdn:
+    image: nginx:stable-alpine
+    volumes:
+      - ./nginx/cdn.conf:/etc/nginx/conf.d/default.conf:ro
+      - reports-cdn-cache:/var/cache/nginx
+    depends_on:
+      - minio
 
 volumes:
   ldap-data: null
@@ -197,3 +222,5 @@ volumes:
   reports-source-data:
   reports-clickhouse-data:
   reports-airflow-data:
+  reports-minio-data:
+  reports-cdn-cache:

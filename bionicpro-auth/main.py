@@ -12,6 +12,7 @@ from datetime import date
 
 import profiles
 
+import re
 import httpx
 import jwt
 from cryptography.fernet import Fernet
@@ -28,6 +29,10 @@ CLIENT_ID = 'bionicpro-auth'
 CLIENT_SECRET = os.environ['BIONICPRO_AUTH_CLIENT_SECRET']
 CIPHER = Fernet(os.environ['TOKEN_ENCRYPTION_KEY'].encode())
 API_URL = os.environ.get('REPORTS_API_URL', 'http://reports-api:8000').rstrip('/')
+CDN_URL = os.environ.get(
+    'REPORTS_CDN_URL',
+    'http://reports-cdn:8080',
+).rstrip('/')
 SESSION_TTL = 1800
 COOKIE = '__Host-bionicpro_session'
 LOGIN_COOKIE = '__Host-bionicpro_login'
@@ -260,3 +265,84 @@ async def consent(request: Request):
         # A refusal never requests or stores business profile data.
         session['consent_required'] = False
         return rotate(request, session, JSONResponse({'saved': choice['allow']}))
+
+@app.get('/cdn/reports/{owner}/{filename}')
+async def report_file(
+    request: Request,
+    owner: str,
+    filename: str,
+):
+    async with lock:
+        session, error = await authorized(request)
+
+        if error is not None:
+            return error
+
+        if session.get('consent_required'):
+            return rotate(
+                request,
+                session,
+                JSONResponse(
+                    {'detail': 'Profile consent is required'},
+                    status_code=403,
+                ),
+            )
+
+        expected_owner = hashlib.sha256(
+            session['subject'].encode('utf-8')
+        ).hexdigest()
+
+        if owner != expected_owner:
+            raise HTTPException(
+                status_code=403,
+                detail='Доступ к чужому отчёту запрещён',
+            )
+
+        if not re.fullmatch(
+            r'\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}_v\d+\.json',
+            filename,
+        ):
+            raise HTTPException(
+                status_code=404,
+                detail='Отчёт не найден',
+            )
+
+        try:
+            upstream = await request.app.state.http.get(
+                CDN_URL + f'/reports/reports/{owner}/{filename}',
+                params=list(request.query_params.multi_items()),
+            )
+
+            if upstream.status_code == 200:
+                response = Response(
+                    content=upstream.content,
+                    media_type='application/json',
+                    headers={
+                        'X-Cache-Status': upstream.headers.get(
+                            'X-Cache-Status',
+                            'UNKNOWN',
+                        ),
+                    },
+                )
+            elif upstream.status_code in (403, 404):
+                response = JSONResponse(
+                    {
+                        'detail': (
+                            'Файл недоступен. Запросите отчёт повторно.'
+                        ),
+                    },
+                    status_code=upstream.status_code,
+                )
+            else:
+                response = JSONResponse(
+                    {'detail': 'Не удалось получить файл отчёта'},
+                    status_code=502,
+                )
+
+        except httpx.HTTPError:
+            response = JSONResponse(
+                {'detail': 'Сервис выдачи отчётов недоступен'},
+                status_code=502,
+            )
+
+        return rotate(request, session, response)
