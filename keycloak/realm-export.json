@@ -17,6 +17,16 @@
         }
       ]
     },
+    "groups": [
+      {
+        "name": "user",
+        "realmRoles": ["user"]
+      },
+      {
+        "name": "prothetic_user",
+        "realmRoles": ["prothetic_user"]
+      }
+    ],
     "users": [
       {
         "username": "user1",
@@ -109,6 +119,100 @@
         "realmRoles": ["prothetic_user"]
       }
     ],
+    "components": {
+      "org.keycloak.storage.UserStorageProvider": [
+        {
+          "name": "ldap-representation-office",
+          "providerId": "ldap",
+          "subComponents": {
+            "org.keycloak.storage.ldap.mappers.LDAPStorageMapper": [
+              {
+                "name": "groups",
+                "providerId": "group-ldap-mapper",
+                "config": {
+                  "enabled": ["true"],
+                  "groups.dn": ["ou=Groups,dc=example,dc=com"],
+                  "group.name.ldap.attribute": ["cn"],
+                  "group.object.classes": ["groupOfNames"],
+                  "membership.ldap.attribute": ["member"],
+                  "membership.attribute.type": ["DN"],
+                  "membership.user.ldap.attribute": ["uid"],
+                  "mode": ["LDAP_ONLY"],
+                  "user.roles.retrieve.strategy": ["LOAD_GROUPS_BY_MEMBER_ATTRIBUTE"]
+                }
+              },
+              {
+                "name": "username",
+                "providerId": "user-attribute-ldap-mapper",
+                "subComponents": {},
+                "config": {
+                  "ldap.attribute": ["uid"],
+                  "is.mandatory.in.ldap": ["true"],
+                  "always.read.value.from.ldap": ["true"],
+                  "read.only": ["true"],
+                  "user.model.attribute": ["username"]
+                }
+              },
+              {
+                "name": "email",
+                "providerId": "user-attribute-ldap-mapper",
+                "subComponents": {},
+                "config": {
+                  "ldap.attribute": ["mail"],
+                  "is.mandatory.in.ldap": ["false"],
+                  "always.read.value.from.ldap": ["true"],
+                  "read.only": ["true"],
+                  "is.binary.attribute": ["false"],
+                  "user.model.attribute": ["email"]
+                }
+              },
+              {
+                "name": "first name",
+                "providerId": "user-attribute-ldap-mapper",
+                "subComponents": {},
+                "config": {
+                  "ldap.attribute": ["cn"],
+                  "is.mandatory.in.ldap": ["true"],
+                  "always.read.value.from.ldap": ["true"],
+                  "read.only": ["true"],
+                  "user.model.attribute": ["firstName"]
+                }
+              },
+              {
+                "name": "last name",
+                "providerId": "user-attribute-ldap-mapper",
+                "subComponents": {},
+                "config": {
+                  "ldap.attribute": ["sn"],
+                  "is.mandatory.in.ldap": ["true"],
+                  "always.read.value.from.ldap": ["true"],
+                  "read.only": ["true"],
+                  "user.model.attribute": ["lastName"]
+                }
+              }
+            ]
+          },
+          "config": {
+            "enabled": ["true"],
+
+            "vendor": ["other"],
+            "connectionUrl": ["ldap://openldap:389"],
+            "bindDn": ["cn=admin,dc=example,dc=com"],
+            "bindCredential": ["admin"],
+            "usersDn": ["ou=People,dc=example,dc=com"],
+            "authType": ["simple"],
+            "editMode": ["READ_ONLY"],
+            "usernameLDAPAttribute": ["uid"],
+            "rdnLDAPAttribute": ["uid"],
+            "uuidLDAPAttribute": ["entryUUID"],
+            "userObjectClasses": ["inetOrgPerson"],
+            "importEnabled": ["true"],
+            "syncRegistrations": ["false"],
+            "searchScope": ["2"]
+          }
+        }
+      ]
+    },
     "accessTokenLifespan": 120,
     "clients": [
       {
