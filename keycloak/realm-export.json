@@ -276,5 +276,26 @@
         "secret": "oNwoLQdvJAvRcL89SydqCWCe5ry1jMgq", 
         "bearerOnly": true
       }
+    ],
+
+    "identityProviders": [
+      {
+        "alias": "yandex",
+        "displayName": "Яндекс ID",
+        "providerId": "yandex",
+        "enabled": true,
+        "updateProfileFirstLoginMode": "on",
+        "trustEmail": true,
+        "storeToken": false,
+        "addReadTokenRoleOnCreate": false,
+        "authenticateByDefault": false,
+        "linkOnly": false,
+        "firstBrokerLoginFlowAlias": "first broker login",
+        "config": {
+          "clientId": "acee6ba36033418386983776a8a94a72",
+          "clientSecret": "53af3fee38ee46fa9d51b87627f74175",
+          "forceConfirm": "true"
+        }
+      }
     ]
   }
