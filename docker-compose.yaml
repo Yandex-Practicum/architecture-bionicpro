@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   keycloak_db:
     image: postgres:14
@@ -20,6 +18,8 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak_db:5432/keycloak_db
       KC_DB_USERNAME: keycloak_user
       KC_DB_PASSWORD: keycloak_password
+      KC_HOSTNAME_URL: http://localhost:8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
     command: 
       - start-dev
       - --import-realm
@@ -37,6 +37,20 @@ services:
       - "3000:3000"
     environment:
       REACT_APP_API_URL: http://localhost:8000
-      REACT_APP_KEYCLOAK_URL: http://localhost:8080
-      REACT_APP_KEYCLOAK_REALM: reports-realm
-      REACT_APP_KEYCLOAK_CLIENT_ID: reports-frontend
+
+  bionicpro-auth:
+    build: ./bionicpro-auth
+    ports:
+      - "8000:8080"
+    environment:
+      KC_URL_INTERNAL: http://keycloak:8080
+      KC_URL_PUBLIC: http://localhost:8080
+      KC_REALM: reports-realm
+      KC_CLIENT_ID: bionicpro-auth
+      KC_SECRET: sp3X9f9UYWQXkN2KzSKJ7ZdLJVWDcVwg+
+      KC_ACCESS_TOKEN_LIFESPAN: 120
+      FRONTEND_URL: http://localhost:3000
+      SESSION_COOKIE_NAME: bff_session
+      SESSION_TTL_SECONDS: 1800
+      # для получения логов сессии
+      Logging__LogLevel__bionicpro_auth: Debug

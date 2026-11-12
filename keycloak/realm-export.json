@@ -109,6 +109,7 @@
         "realmRoles": ["prothetic_user"]
       }
     ],
+    "accessTokenLifespan": 120,
     "clients": [
       {
         "clientId": "reports-frontend",
@@ -119,6 +120,19 @@
         "directAccessGrantsEnabled": false,
         "attributes": {
           "pkce.code.challenge.method": "S256"
+        }
+      },
+      {
+        "clientId": "bionicpro-auth",
+        "enabled": true,
+        "publicClient": false,
+        "clientAuthenticatorType": "client-secret",
+        "secret": "sp3X9f9UYWQXkN2KzSKJ7ZdLJVWDcVwg+",
+        "standardFlowEnabled": true,
+        "redirectUris": ["http://localhost:8000/*"],
+        "attributes": {
+          "pkce.code.challenge.method": "S256",
+          "post.logout.redirect.uris": "http://localhost:3000/*"
         }
       },
       {

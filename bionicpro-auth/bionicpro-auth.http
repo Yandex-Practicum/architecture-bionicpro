@@ -1,0 +1,6 @@
+@pionicpro_auth_HostAddress = http://localhost:5103
+
+GET {{pionicpro_auth_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
