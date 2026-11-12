@@ -31,6 +31,7 @@
       {
         "username": "user1",
         "enabled": true,
+        "requiredActions": ["CONFIGURE_TOTP"],
         "email": "user1@example.com",
         "firstName": "User",
         "lastName": "One",
@@ -46,6 +47,7 @@
       {
         "username": "user2",
         "enabled": true,
+        "requiredActions": ["CONFIGURE_TOTP"],
         "email": "user2@example.com",
         "firstName": "User",
         "lastName": "Two",
@@ -61,6 +63,7 @@
       {
         "username": "admin1",
         "enabled": true,
+        "requiredActions": ["CONFIGURE_TOTP"],
         "email": "admin1@example.com",
         "firstName": "Admin",
         "lastName": "One",
@@ -76,6 +79,7 @@
       {
         "username": "prothetic1",
         "enabled": true,
+        "requiredActions": ["CONFIGURE_TOTP"],
         "email": "prothetic1@example.com",
         "firstName": "Prothetic",
         "lastName": "One",
@@ -91,6 +95,7 @@
       {
         "username": "prothetic2",
         "enabled": true,
+        "requiredActions": ["CONFIGURE_TOTP"],
         "email": "prothetic2@example.com",
         "firstName": "Prothetic",
         "lastName": "Two",
@@ -106,6 +111,7 @@
       {
         "username": "prothetic3",
         "enabled": true,
+        "requiredActions": ["CONFIGURE_TOTP"],
         "email": "prothetic3@example.com",
         "firstName": "Prothetic",
         "lastName": "Three",
@@ -137,7 +143,7 @@
                   "membership.ldap.attribute": ["member"],
                   "membership.attribute.type": ["DN"],
                   "membership.user.ldap.attribute": ["uid"],
-                  "mode": ["LDAP_ONLY"],
+                  "mode": ["READ_ONLY"],
                   "user.roles.retrieve.strategy": ["LOAD_GROUPS_BY_MEMBER_ATTRIBUTE"]
                 }
               },
@@ -194,7 +200,6 @@
           },
           "config": {
             "enabled": ["true"],
-
             "vendor": ["other"],
             "connectionUrl": ["ldap://openldap:389"],
             "bindDn": ["cn=admin,dc=example,dc=com"],
@@ -214,6 +219,31 @@
       ]
     },
     "accessTokenLifespan": 120,
+
+    "otpPolicyType": "totp",
+    "otpPolicyAlgorithm": "HmacSHA1",
+    "otpPolicyDigits": 6,
+    "otpPolicyPeriod": 30,
+    "otpPolicyLookAheadWindow": 1,
+    "otpPolicyInitialCounter": 0,
+    "otpSupportedApplications": [
+      "FreeOTP",
+      "Google Authenticator",
+      "Microsoft Authenticator"
+    ],
+
+    "requiredActions": [
+      {
+        "alias": "CONFIGURE_TOTP",
+        "name": "Configure OTP",
+        "providerId": "CONFIGURE_TOTP",
+        "enabled": true,
+        "defaultAction": true,
+        "priority": 10,
+        "config": {}
+      }
+    ],
+
     "clients": [
       {
         "clientId": "reports-frontend",
