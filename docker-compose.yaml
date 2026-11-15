@@ -1,4 +1,17 @@
-version: '3.8'
+x-airflow-common: &airflow-common
+  image: apache/airflow:2.10.5-python3.11
+  environment: &airflow-environment
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@airflow_db:5432/airflow
+    AIRFLOW__WEBSERVER__SECRET_KEY: bionicpro-local-airflow-secret
+    AIRFLOW_CONN_TELEMETRY_POSTGRES: postgresql://etl:etl_password@telemetry_db:5432/telemetry
+    AIRFLOW_CONN_CLICKHOUSE_HTTP: http://etl:etl_password@clickhouse:8123
+    REPORTS_CACHE_URL: http://reports-api:8000/internal/cache/versions
+    INTERNAL_CACHE_TOKEN: ${INTERNAL_CACHE_TOKEN:?set INTERNAL_CACHE_TOKEN to a random value}
+  volumes:
+    - ./Task2/dags:/opt/airflow/dags:ro
 
 services:
   keycloak_db:
@@ -20,6 +33,9 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak_db:5432/keycloak_db
       KC_DB_USERNAME: keycloak_user
       KC_DB_PASSWORD: keycloak_password
+      KC_HOSTNAME_URL: http://localhost:8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "false"
+      YANDEX_BRIDGE_SECRET: ${YANDEX_BRIDGE_SECRET:?set YANDEX_BRIDGE_SECRET to a random value}
     command: 
       - start-dev
       - --import-realm
@@ -28,15 +44,331 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - keycloak_db
+      keycloak_db:
+        condition: service_started
+      openldap:
+        condition: service_healthy
+      yandex-id-bridge:
+        condition: service_started
+  openldap:
+    image: osixia/openldap:1.5.0
+    command: --copy-service
+    environment:
+      LDAP_ORGANISATION: BionicPRO International
+      LDAP_DOMAIN: example.com
+      LDAP_ADMIN_PASSWORD: admin
+    volumes:
+      - ./ldap/config.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif:ro
+    ports:
+      - "389:389"
+    healthcheck:
+      test: ["CMD", "ldapwhoami", "-x", "-H", "ldap://localhost:389", "-D", "cn=admin,dc=example,dc=com", "-w", "admin"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  yandex-id-bridge:
+    build:
+      context: ./yandex-id-bridge
+      dockerfile: Dockerfile
+    environment:
+      YANDEX_CLIENT_ID: ${YANDEX_CLIENT_ID:?set YANDEX_CLIENT_ID from the Yandex OAuth application}
+      YANDEX_CLIENT_SECRET: ${YANDEX_CLIENT_SECRET:?set YANDEX_CLIENT_SECRET from the Yandex OAuth application}
+      OIDC_CLIENT_SECRET: ${YANDEX_BRIDGE_SECRET:?set YANDEX_BRIDGE_SECRET to a random value}
+    ports:
+      - "8090:8090"
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    depends_on:
+      - bionicpro-auth
+  bionicpro-auth:
+    build:
+      context: ./bionicpro-auth
+      dockerfile: Dockerfile
     environment:
-      REACT_APP_API_URL: http://localhost:8000
-      REACT_APP_KEYCLOAK_URL: http://localhost:8080
-      REACT_APP_KEYCLOAK_REALM: reports-realm
-      REACT_APP_KEYCLOAK_CLIENT_ID: reports-frontend
+      KEYCLOAK_URL: http://keycloak:8080
+      KEYCLOAK_PUBLIC_URL: http://localhost:8080
+      KEYCLOAK_REALM: reports-realm
+      KEYCLOAK_CLIENT_ID: reports-frontend
+      KEYCLOAK_CLIENT_SECRET: bionicpro-local-development-secret
+      OAUTH_REDIRECT_URL: http://localhost:3000/auth/callback
+      FRONTEND_URL: http://localhost:3000
+      REPORTS_API_URL: http://reports-api:8000
+      SESSION_ENCRYPTION_KEY: ${SESSION_ENCRYPTION_KEY}
+    depends_on:
+      - keycloak
+      - reports-api
+  crm_db:
+    image: postgres:14
+    command: postgres -c wal_level=logical -c max_replication_slots=4 -c max_wal_senders=4
+    environment:
+      POSTGRES_DB: crm
+      POSTGRES_USER: etl
+      POSTGRES_PASSWORD: etl_password
+    volumes:
+      - crm-data:/var/lib/postgresql/data
+      - ./Task2/postgres/crm-init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - "127.0.0.1:5434:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl -d crm"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  debezium-db-init:
+    image: postgres:14
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        psql -v ON_ERROR_STOP=1 --host crm_db --username etl --dbname crm --set=debezium_password="$$DEBEZIUM_DB_PASSWORD" <<'SQL'
+        SELECT format(
+          CASE WHEN EXISTS (SELECT FROM pg_roles WHERE rolname = 'debezium')
+            THEN 'ALTER ROLE debezium WITH LOGIN REPLICATION PASSWORD %L'
+            ELSE 'CREATE ROLE debezium WITH LOGIN REPLICATION PASSWORD %L'
+          END,
+          :'debezium_password'
+        ) \gexec
+        GRANT CONNECT ON DATABASE crm TO debezium;
+        GRANT USAGE ON SCHEMA crm TO debezium;
+        GRANT SELECT ON ALL TABLES IN SCHEMA crm TO debezium;
+        SELECT 'CREATE PUBLICATION crm_debezium_publication FOR TABLE crm.clients, crm.prostheses'
+        WHERE NOT EXISTS (SELECT FROM pg_publication WHERE pubname = 'crm_debezium_publication') \gexec
+        SQL
+    environment:
+      PGPASSWORD: etl_password
+      DEBEZIUM_DB_PASSWORD: ${DEBEZIUM_DB_PASSWORD:?set DEBEZIUM_DB_PASSWORD to a random value}
+    depends_on:
+      crm_db:
+        condition: service_healthy
+  kafka:
+    image: apache/kafka:3.9.1
+    user: "0:0"
+    environment:
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_NODE_ID: "1"
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: "1"
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+    volumes:
+      - kafka-data:/tmp/kraft-combined-logs
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list >/dev/null"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+  debezium-connect:
+    image: quay.io/debezium/connect:2.7.4.Final
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: bionicpro-debezium
+      CONFIG_STORAGE_TOPIC: bionicpro_connect_configs
+      OFFSET_STORAGE_TOPIC: bionicpro_connect_offsets
+      STATUS_STORAGE_TOPIC: bionicpro_connect_status
+      CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_CONFIG_PROVIDERS: env
+      CONNECT_CONFIG_PROVIDERS_ENV_CLASS: org.apache.kafka.common.config.provider.EnvVarConfigProvider
+      DEBEZIUM_DB_PASSWORD: ${DEBEZIUM_DB_PASSWORD:?set DEBEZIUM_DB_PASSWORD to a random value}
+    depends_on:
+      kafka:
+        condition: service_healthy
+      debezium-db-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8083/connectors >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+  debezium-init:
+    image: curlimages/curl:8.10.1
+    command: ["-fsS", "-X", "PUT", "http://debezium-connect:8083/connectors/crm-cdc/config", "-H", "Content-Type: application/json", "--data-binary", "@/config/crm-connector.json"]
+    volumes:
+      - ./Task4/debezium:/config:ro
+    depends_on:
+      debezium-connect:
+        condition: service_healthy
+      clickhouse-cdc-init:
+        condition: service_completed_successfully
+  telemetry_db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: telemetry
+      POSTGRES_USER: etl
+      POSTGRES_PASSWORD: etl_password
+    volumes:
+      - telemetry-data:/var/lib/postgresql/data
+      - ./Task2/postgres/telemetry-init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    ports:
+      - "5435:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U etl -d telemetry"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.10-alpine
+    environment:
+      CLICKHOUSE_DB: reporting
+      CLICKHOUSE_USER: etl
+      CLICKHOUSE_PASSWORD: etl_password
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+    volumes:
+      - clickhouse-data:/var/lib/clickhouse
+    ports:
+      - "8123:8123"
+    healthcheck:
+      test: ["CMD-SHELL", "clickhouse-client --user etl --password etl_password --query 'SELECT 1'"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    depends_on:
+      kafka:
+        condition: service_healthy
+  clickhouse-cdc-init:
+    image: clickhouse/clickhouse-server:24.10-alpine
+    entrypoint: ["clickhouse-client"]
+    command: ["--host", "clickhouse", "--user", "etl", "--password", "etl_password", "--multiquery", "--queries-file", "/init/cdc.sql"]
+    volumes:
+      - ./Task4/clickhouse:/init:ro
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+  cdc-ready:
+    image: clickhouse/clickhouse-server:24.10-alpine
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        for i in $$(seq 1 60); do
+          ready=$$(clickhouse-client --host clickhouse --user etl --password etl_password --queries-file /init/cdc-ready.sql)
+          [ "$$ready" = "1" ] && exit 0
+          sleep 2
+        done
+        exit 1
+    volumes:
+      - ./Task4/clickhouse:/init:ro
+    depends_on:
+      clickhouse-cdc-init:
+        condition: service_completed_successfully
+      debezium-init:
+        condition: service_completed_successfully
+  airflow_db:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+    volumes:
+      - airflow-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U airflow -d airflow"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  airflow-init:
+    <<: *airflow-common
+    command:
+      - bash
+      - -c
+      - |
+        set -e
+        airflow db migrate
+        airflow users create --username admin --password admin --firstname Airflow --lastname Admin --role Admin --email admin@example.com || true
+    depends_on:
+      airflow_db:
+        condition: service_healthy
+      telemetry_db:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+      cdc-ready:
+        condition: service_completed_successfully
+  airflow-webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8081:8080"
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+  airflow-scheduler:
+    <<: *airflow-common
+    command: scheduler
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+      reports-api:
+        condition: service_started
+  reports-api:
+    build:
+      context: ./Task2/reports_api
+    environment:
+      KEYCLOAK_JWKS_URL: http://keycloak:8080/realms/reports-realm/protocol/openid-connect/certs
+      KEYCLOAK_ISSUER: http://localhost:8080/realms/reports-realm
+      CLICKHOUSE_HOST: clickhouse
+      CLICKHOUSE_PORT: "8123"
+      CLICKHOUSE_USER: etl
+      CLICKHOUSE_PASSWORD: etl_password
+      CLICKHOUSE_SECURE: "false"
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER}
+      S3_SECRET_KEY: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD to a random value}
+      S3_BUCKET: reports-cache
+      CDN_BASE_URL: http://localhost:8082
+      CDN_SIGNING_KEY: ${CDN_SIGNING_KEY:?set CDN_SIGNING_KEY to a random value}
+      REPORT_CACHE_KEY: ${REPORT_CACHE_KEY:?set REPORT_CACHE_KEY to a random value}
+      INTERNAL_CACHE_TOKEN: ${INTERNAL_CACHE_TOKEN:?set INTERNAL_CACHE_TOKEN to a random value}
+    ports:
+      - "8001:8000"
+    depends_on:
+      cdc-ready:
+        condition: service_completed_successfully
+      minio:
+        condition: service_started
+      reports-cdn:
+        condition: service_started
+  minio:
+    image: elestio/minio@sha256:25348a257f1ece1b192f25f6cd9854618fa86422ac87b494b5d4e629c556d4bd
+    volumes:
+      - minio_storage:/data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD to a random value}
+    command: server --console-address ":9001" /data
+  reports-cdn:
+    image: nginx:1.27-alpine
+    environment:
+      CDN_SIGNING_KEY: ${CDN_SIGNING_KEY:?set CDN_SIGNING_KEY to a random value}
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./Task3/cdn.conf.template:/etc/nginx/templates/cdn.conf.template:ro
+      - cdn-cache:/var/cache/nginx
+    depends_on:
+      - minio
+
+volumes:
+  airflow-data:
+  clickhouse-data:
+  crm-data:
+  telemetry-data:
+  minio_storage:
+  cdn-cache:
+  kafka-data:

@@ -1,28 +1,36 @@
-import React, { useState } from 'react';
-import { useKeycloak } from '@react-keycloak/web';
+import React, { useEffect, useState } from 'react';
 
 const ReportPage: React.FC = () => {
-  const { keycloak, initialized } = useKeycloak();
+  const [authenticated, setAuthenticated] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const downloadReport = async () => {
-    if (!keycloak?.token) {
-      setError('Not authenticated');
-      return;
-    }
+  useEffect(() => {
+    fetch('/auth/session', { credentials: 'include' })
+      .then(response => setAuthenticated(response.ok))
+      .catch(() => setAuthenticated(false));
+  }, []);
 
+  const downloadReport = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/reports`, {
-        headers: {
-          'Authorization': `Bearer ${keycloak.token}`
-        }
-      });
-
-      
+      const response = await fetch('/reports', { credentials: 'include' });
+      if (response.status === 401) {
+        setAuthenticated(false);
+        throw new Error('Session expired');
+      }
+      if (!response.ok) throw new Error('Could not download report');
+      const { url } = await response.json();
+      const report = await fetch(url);
+      if (!report.ok) throw new Error('Could not download report');
+      const blob = await report.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'report.json';
+      link.click();
+      URL.revokeObjectURL(link.href);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -30,15 +38,15 @@ const ReportPage: React.FC = () => {
     }
   };
 
-  if (!initialized) {
+  if (authenticated === null) {
     return <div>Loading...</div>;
   }
 
-  if (!keycloak.authenticated) {
+  if (!authenticated) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <button
-          onClick={() => keycloak.login()}
+          onClick={() => window.location.assign('/auth/login')}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Login

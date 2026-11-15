@@ -1,0 +1,21 @@
+{
+  "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+  "tasks.max": "1",
+  "database.hostname": "crm_db",
+  "database.port": "5432",
+  "database.user": "debezium",
+  "database.password": "${env:DEBEZIUM_DB_PASSWORD}",
+  "database.dbname": "crm",
+  "topic.prefix": "crm_cdc",
+  "plugin.name": "pgoutput",
+  "slot.name": "crm_debezium_slot",
+  "publication.name": "crm_debezium_publication",
+  "publication.autocreate.mode": "disabled",
+  "table.include.list": "crm.clients,crm.prostheses",
+  "snapshot.mode": "initial",
+  "tombstones.on.delete": "false",
+  "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+  "key.converter.schemas.enable": "false",
+  "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+  "value.converter.schemas.enable": "false"
+}

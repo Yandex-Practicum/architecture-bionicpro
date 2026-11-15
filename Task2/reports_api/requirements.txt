@@ -1,0 +1,5 @@
+clickhouse-connect==0.8.18
+boto3==1.35.99
+fastapi==0.115.12
+PyJWT[crypto]==2.10.1
+uvicorn==0.34.2
