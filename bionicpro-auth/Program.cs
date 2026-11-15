@@ -12,6 +12,7 @@ var sessionTtl = TimeSpan.FromSeconds(sessionTtlSeconds);
 var sessionCookieName = builder.Configuration.GetValue<string>("SESSION_COOKIE_NAME") ?? "bff_session";
 
 var frontendUrl = builder.Configuration.GetValue<string>("FRONTEND_URL") ?? "http://localhost:3000";
+var reportsApiUrl = builder.Configuration.GetValue<string>("REPORTS_API_URL") ?? "http://reports-api:8080";
 
 builder.Services.AddAuthentication(options =>
     {
@@ -64,6 +65,7 @@ builder.Services.AddDataProtection();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<SessionStore>();
 builder.Services.AddHttpClient<KeycloakTokenService>();
+builder.Services.AddHttpClient("reports-api");
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -106,7 +108,8 @@ app.MapGet("/auth/logout", (HttpContext context, SessionStore store) =>
     return Results.SignOut(new AuthenticationProperties { RedirectUri = frontendUrl }, [ OpenIdConnectDefaults.AuthenticationScheme ]);
 });
 
-app.MapGet("/api/reports", async (HttpContext context, SessionStore store, KeycloakTokenService tokenService, ILogger<Program> logger) =>
+app.MapGet("/api/reports", async (HttpContext context, SessionStore store, KeycloakTokenService tokenService,
+    IHttpClientFactory httpClientFactory, ILogger<Program> logger) =>
 {
     if (!context.Request.Cookies.TryGetValue(sessionCookieName, out var sessionId))
         return Results.Unauthorized();
@@ -142,7 +145,27 @@ app.MapGet("/api/reports", async (HttpContext context, SessionStore store, Keycl
             MaxAge = sessionTtl
         });
 
-    return Results.NoContent();
+    var http = httpClientFactory.CreateClient("reports-api");
+    using var request = new HttpRequestMessage(HttpMethod.Get,
+        $"{reportsApiUrl}/reports{context.Request.QueryString}");
+    request.Headers.Authorization =
+        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", session.AccessToken);
+
+    var response = await http.SendAsync(request);
+
+    if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        return Results.NotFound(new
+        {
+            error = "report_not_ready",
+            message = "Отчёт ещё формируется. Попробуйте позже."
+        });
+
+    if (response.IsSuccessStatusCode)
+        return Results.Content(await response.Content.ReadAsStringAsync(), "application/json");
+
+    logger.LogWarning("reports-api вернул {StatusCode}", (int)response.StatusCode);
+    return Results.Problem("Ошибка сервиса отчётов", statusCode: 502);
+
 });
 
 app.Run();

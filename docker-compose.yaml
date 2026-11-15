@@ -61,8 +61,24 @@ services:
       FRONTEND_URL: http://localhost:3000
       SESSION_COOKIE_NAME: bff_session
       SESSION_TTL_SECONDS: 1800
+      REPORTS_API_URL: http://reports-api:8080
       # для получения логов сессии
       Logging__LogLevel__bionicpro_auth: Debug
+
+
+  reports-api:
+    build: ./reports-api
+    ports:
+      - "8001:8080"
+    environment:
+      Keycloak__MetadataAddress: http://keycloak:8080/realms/reports-realm/.well-known/openid-configuration
+      Keycloak__Issuer: http://localhost:8080/realms/reports-realm
+      ClickHouse__Url: http://clickhouse:8123
+      ClickHouse__User: default
+      ClickHouse__Password: clickhouse
+    depends_on:
+      - keycloak
+      - clickhouse
 
   openldap:
     image: osixia/openldap:1.5.0
