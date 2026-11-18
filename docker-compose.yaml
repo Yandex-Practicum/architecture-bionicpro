@@ -76,6 +76,11 @@ services:
       ClickHouse__Url: http://clickhouse:8123
       ClickHouse__User: default
       ClickHouse__Password: clickhouse
+      S3__ServiceUrl: http://garage:3900
+      S3__AccessKey: GK5e77ac0c3ee479e35d5c430136f10deb
+      S3__SecretKey: 1c5f65021fdb14abf6cf0f7a460d29bd
+      S3__Bucket: reports
+      Cdn__BaseUrl: http://localhost:8082/reports
     depends_on:
       - keycloak
       - clickhouse
@@ -148,6 +153,11 @@ services:
       CLICKHOUSE_PORT: "8123"
       CLICKHOUSE_USER: default
       CLICKHOUSE_PASSWORD: clickhouse
+      S3_ENDPOINT_URL: http://garage:3900
+      S3_ACCESS_KEY: GK5e77ac0c3ee479e35d5c430136f10deb
+      S3_SECRET_KEY: 1c5f65021fdb14abf6cf0f7a460d29bd
+      AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+      AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
     volumes:
       - ./airflow-dags:/opt/airflow/dags
     depends_on:
@@ -157,3 +167,62 @@ services:
         condition: service_healthy
       clickhouse:
         condition: service_started
+
+  telemetry-gen:
+    build: ./telemetry-gen
+    restart: unless-stopped
+    environment:
+      TELEMETRY_DB_CONN: postgresql://telemetry:telemetry@telemetry-db:5432/telemetry
+    depends_on:
+      telemetry-db:
+        condition: service_healthy
+
+  garage:
+    image: dxflrs/garage:v2.5.0
+    command: /garage server --single-node --default-bucket
+    environment:
+      GARAGE_DEFAULT_ACCESS_KEY: GK5e77ac0c3ee479e35d5c430136f10deb
+      GARAGE_DEFAULT_SECRET_KEY: 1c5f65021fdb14abf6cf0f7a460d29bd
+      GARAGE_DEFAULT_BUCKET: reports
+    ports:
+      - "3900:3900"   # S3 API
+      - "3902:3902"   # website endpoint для CDN
+    volumes:
+      - ./garage/garage.toml:/etc/garage.toml:ro
+      - garage-meta:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+
+  garage-init:
+    image: alpine:3.21
+    depends_on:
+      - garage
+    network_mode: service:garage
+    pid: service:garage
+    restart: "on-failure:5"
+    entrypoint: [ /bin/sh, -eu, -c ]
+    command:
+      - |
+        G="chroot /proc/1/root /garage -c /etc/garage.toml"
+
+        for i in $$(seq 1 20); do
+          if $$G node id -q 2>/dev/null; then break; fi
+          echo "Ожидание Garage RPC... ($$i/20)"
+          sleep 3
+        done
+
+        $$G bucket website --allow reports
+        echo "website access включен для бакета reports"
+
+  cdn:
+    image: nginx:1.27
+    ports:
+      - "8082:80"
+    volumes:
+      - ./cdn/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      garage-init:
+        condition: service_completed_successfully
+
+volumes:
+  garage-meta:
+  garage-data:

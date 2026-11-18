@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AWSSDK.S3" Version="3.7.511.8" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.23" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6"/>
     </ItemGroup>
