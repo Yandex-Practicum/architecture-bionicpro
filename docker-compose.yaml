@@ -113,6 +113,7 @@ services:
 
   crm-db:
     image: postgres:14
+    command: postgres -c wal_level=logical
     environment:
       POSTGRES_DB: crm
       POSTGRES_USER: crm
@@ -127,6 +128,7 @@ services:
 
   telemetry-db:
     image: postgres:14
+    command: postgres -c wal_level=logical
     environment:
       POSTGRES_DB: telemetry
       POSTGRES_USER: telemetry
@@ -138,6 +140,74 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  kafka:
+    image: apache/kafka:3.9.1
+    restart: unless-stopped
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,PLAINTEXT_HOST://:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list > /dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+
+  cdc:
+    image: debezium/connect:2.7.3.Final
+    restart: unless-stopped
+    ports:
+      - "8083:8083"
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: debezium
+      CONFIG_STORAGE_TOPIC: connect_configs
+      OFFSET_STORAGE_TOPIC: connect_offsets
+      STATUS_STORAGE_TOPIC: connect_statuses
+      CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      STATUS_STORAGE_REPLICATION_FACTOR: 1
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  cdc-init:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      - cdc
+    restart: "no"
+    volumes:
+      - ./connectors:/connectors:ro
+    entrypoint: [ /bin/sh, -eu, -c ]
+    command:
+      - |
+        echo "Ожидание Kafka Connect..."
+        for i in $$(seq 1 30); do
+          if curl -sf http://cdc:8083/ > /dev/null; then break; fi
+          sleep 2
+        done
+
+        curl -sf -X PUT \
+          -H "Content-Type: application/json" \
+          --data @/connectors/crm-connector.json \
+          http://cdc:8083/connectors/crm-connector/config
+
+        echo "Коннектор crm-connector зарегистрирован"
 
   airflow:
     build: ./airflow
@@ -226,3 +296,4 @@ services:
 volumes:
   garage-meta:
   garage-data:
+  kafka-data:
